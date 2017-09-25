@@ -123,7 +123,7 @@ bool NativeEngine::InitRenderer() {
         LOG("unable to load vertex shader.");
         return false;
     }
-    if (!mFragShaderLoader.loadShader("fragment.glsl")) {
+    if (!mFragShaderLoader.loadShader("basic.frag")) {
         LOG("unable to load fragment shader.");
         return false;
     }
@@ -151,9 +151,6 @@ bool NativeEngine::InitRenderer() {
     glViewport(0, 0, mWidth, mHeight);
 
     glUseProgram(mProgram);
-
-
-
 
     return true;
 }
@@ -202,13 +199,21 @@ void NativeEngine::RenderFrame() {
     // | /      |/
     // d - - - -c
     GLfloat vertices[] = {
-          0.0f, 0.5f, 0.0f,
+          0.0f, 0.0f, 0.0f,
           -0.5f, -0.5f, 0.0f,
           0.5f, -0.5f, 0.0f
     };
 
+    GLfloat colors[] = {
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f
+    };
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors);
+    glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
     //bind vertex data
