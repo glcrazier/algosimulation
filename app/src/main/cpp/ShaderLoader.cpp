@@ -15,18 +15,21 @@ GLuint ShaderLoader::loadShader(std::string assetName) {
     }
 
     AAsset *asset = AAssetManager_open(mApp->activity->assetManager,
-                                       assetName.c_str(), AASSET_MODE_BUFFER);
+                                       assetName.c_str(), AASSET_MODE_STREAMING);
     if (asset) {
-        off_t sourceLength = AAsset_getLength(asset);
+        size_t sourceLength = (size_t)AAsset_getLength(asset);
         if (sourceLength > 0) {
-            char *buf = (char *) malloc(sizeof(off_t) * sourceLength);
+            char *buf = (char *) malloc(sourceLength + 1);
             char *offset = buf;
             int readBytes = 0;
             while ((readBytes = AAsset_read(asset, offset, sourceLength)) > 0) {
                 offset += readBytes;
             }
+            buf[sourceLength] = '\0';
 
-            glShaderSource(mShader, 1, (const GLchar *const *) buf, NULL);
+            AAsset_close(asset);
+
+            glShaderSource(mShader, 1, (const GLchar *const *) &buf, NULL);
             glCompileShader(mShader);
 
             GLint compiled;

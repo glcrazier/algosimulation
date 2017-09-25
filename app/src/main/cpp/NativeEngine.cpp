@@ -119,7 +119,7 @@ bool NativeEngine::InitRenderer() {
     eglQuerySurface(mEGLDisplay, mEGLSurface, EGL_WIDTH, &mWidth);
     eglQuerySurface(mEGLDisplay, mEGLSurface, EGL_HEIGHT, &mHeight);
 
-    if (!mVertexShaderLoader.loadShader("vertex.glsl")) {
+    if (!mVertexShaderLoader.loadShader("basic.vert")) {
         LOG("unable to load vertex shader.");
         return false;
     }
