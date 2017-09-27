@@ -191,13 +191,6 @@ void NativeEngine::RenderFrame() {
 
     //let's build a cubic.
     //vertices, transforms, colors
-    //
-    //    e - - - f
-    //  / |      /|
-    // a -| - - b |
-    // |  h - - - g
-    // | /      |/
-    // d - - - -c
     GLfloat vertices[] = {
           0.0f, 0.0f, 0.0f,
           -0.5f, -0.5f, 0.0f,

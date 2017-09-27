@@ -20,6 +20,13 @@ The best way to learn how to set up environment is to download a sample from And
 
 ### Perspective View & Camera
 
+A frustum view matrix has following elements:
+* far plane
+* near plane
+* focal
+
+The actions we'll take is to transform perspective view matrix to normalized bounding box.
+
 ### Texture Mapping
 
 ### Geometry
