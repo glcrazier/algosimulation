@@ -18,14 +18,14 @@ The best way to learn how to set up environment is to download a sample from And
 * At last, invoke draw command to render.
 
 
-### Perspective View & Camera
+### Camera
 
-A frustum view matrix has following elements:
-* far plane
-* near plane
-* focal
+A camera has following properties:
+1. Position.
+2. Look direction.
+3. Near and far distance.
 
-The actions we'll take is to transform perspective view matrix to normalized bounding box.
+The actions we'll take is to convert camera specification into perspective view matrix, then transform perspective view matrix to standard view volume.
 
 ### Texture Mapping
 
