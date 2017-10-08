@@ -3,3 +3,12 @@
 //
 
 #include "Camera.h"
+
+Camera::Camera(Point position, Vector3 lookDirection, GLfloat near, GLfloat far)
+        : mPosition(position)
+        , mLookDirection(lookDirection)
+        , mNear(near)
+        , mFar(far)
+{
+
+}

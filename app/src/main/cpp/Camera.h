@@ -10,7 +10,13 @@
 #include "Vector.h"
 
 class Camera {
+public:
     Camera(Point position, Vector3 lookDirection, GLfloat near, GLfloat far);
+
+private:
+    Point mPosition;
+    Vector3 mLookDirection;
+    GLfloat mNear, mFar;
 };
 
 
