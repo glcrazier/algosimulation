@@ -8,15 +8,14 @@
 
 #include "Geometry.h"
 #include "Vector.h"
-
+#include "Matrix.h"
 class Camera {
 public:
-    Camera(Point position, Vector3 lookDirection, GLfloat near, GLfloat far);
+    Camera(Point& position, Vector3& lookDirection, Vector3& upDirection
+            , float near, float far, float aspectRatio);
 
 private:
-    Point mPosition;
-    Vector3 mLookDirection;
-    GLfloat mNear, mFar;
+    Matrix4x4 mFrustum;
 };
 
 

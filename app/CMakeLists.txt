@@ -25,6 +25,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/Geometry.cpp
              src/main/cpp/Vector.cpp
              src/main/cpp/Camera.cpp
+             src/main/cpp/Matrix.cpp
              src/main/cpp/ShaderLoader.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
