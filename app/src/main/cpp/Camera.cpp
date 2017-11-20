@@ -15,11 +15,11 @@ Camera::Camera(Point& position, Vector3& lookDirection, Vector3& upDirection, fl
 
     Vector3 u = cross(v, w);
 
-    mFrustum = Matrix4x4(u.x(), u.y(), u.z(), 0,
-                         v.x(), v.y(), v.z(), 0,
-                         w.x(), w.y(), w.z(), 0,
-                         0,         0,     0, 1) * mFrustum;
+    Matrix4x4 m = Transform::createTransformFromVectors(u, v, w);
 
+    mFrustum.applyMatrix(m);
+
+    mFrustum.scale(1.0f / (far), 1.0f / far, 1.0f / far);
     //TODO: Finish the remaining part.
 
 }

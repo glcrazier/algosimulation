@@ -7,24 +7,38 @@
 
 #include "Vector.h"
 
-class Matrix4x4 {
+template <int M> class Matrix {
 public:
-    Matrix4x4();
+    Matrix() {
+        loadIdentity(*this);
+    };
+    friend class Transform;
 
-    Matrix4x4(float m00, float m01, float m02, float m03,
-                float m10, float m11, float m12, float m13,
-                float m20, float m21, float m22, float m23,
-                float m30, float m31, float m32, float m33);
+    friend void loadIdentity(Matrix& matrix) {
+        for (int i = 0; i < M; ++i) {
+            for (int j = 0; j < M; ++j) {
+                matrix.m[i][j] = (i == j ? 1.0f : 0.0f);
+            }
+        }
+    };
 
-    Matrix4x4& translate(float x, float y, float z);
-
-    Matrix4x4& scale(float x, float y, float z);
-
-    friend Matrix4x4& loadIdentity(Matrix4x4& matrix);
-
-    friend Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);
+    friend Matrix operator*(const Matrix& m1, const Matrix& m2) {
+        Matrix<M> m;
+        for (int i = 0; i < M; ++i) {
+            for (int j = 0; j < M; ++j) {
+                m.m[i][j] = 0.0f;
+                for (int k = 0; k < M; ++k) {
+                    m.m[i][j] += (m1.m[i][k] * m2.m[k][j]);
+                }
+            }
+        }
+        return m;
+    };
 private:
-    float m[4][4];
+    float m[M][M];
 };
+
+typedef Matrix<4> Matrix4x4;
+
 
 #endif //FIRST3D_MATRIX_H

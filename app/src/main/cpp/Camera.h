@@ -8,14 +8,14 @@
 
 #include "Geometry.h"
 #include "Vector.h"
-#include "Matrix.h"
+#include "Transform.h"
 class Camera {
 public:
     Camera(Point& position, Vector3& lookDirection, Vector3& upDirection
             , float near, float far, float aspectRatio);
 
 private:
-    Matrix4x4 mFrustum;
+    Transform mFrustum;
 };
 
 
