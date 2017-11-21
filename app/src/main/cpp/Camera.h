@@ -12,8 +12,11 @@
 class Camera {
 public:
     Camera(Point& position, Vector3& lookDirection, Vector3& upDirection
-            , float near, float far, float aspectRatio);
+            , float near, float far, float farPlaneWidth, float farPlaneHeight);
 
+    float* getMatrixData() {
+        return mFrustum.getData();
+    }
 private:
     Transform mFrustum;
 };

@@ -5,6 +5,9 @@
 #include "NativeEngine.h"
 #include <GLES3/gl3.h>
 #include <EGL/eglext.h>
+#include "Camera.h"
+#include "Geometry.h"
+#include "Vector.h"
 
 static void handle_app_cmd(struct android_app *app, int32_t cmd) {
     NativeEngine *engine = (NativeEngine *) app->userData;
@@ -152,6 +155,27 @@ bool NativeEngine::InitRenderer() {
 
     glUseProgram(mProgram);
 
+    GLint numUniforms;
+    GLint maxUniformLen;
+    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
+    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
+
+    char *uniformName = (char *) malloc(sizeof (char) * maxUniformLen);
+
+    for (int i = 0; i < numUniforms; ++i) {
+        GLenum  type;
+        glGetActiveUniform(mProgram, i, maxUniformLen, NULL, NULL, &type, uniformName);
+        LOG("uniform name %s", uniformName);
+        GLint location = glGetUniformLocation(mProgram, uniformName);
+        Point p = {0.0f, 0.0f, 0.2f};
+        Vector3 look(0.0f, 0.0f, -1.0f);
+        Vector3 vup(0.0f, 1.0f, 0.0f);
+        Camera camera(p, look, vup, 0.1f, 1.0f, 2.0f, 2.0f);
+        glUniformMatrix4fv(location, 1, GL_FALSE, camera.getMatrixData());
+    }
+
+    free(uniformName);
+
     return true;
 }
 
@@ -192,9 +216,9 @@ void NativeEngine::RenderFrame() {
     //let's build a cubic.
     //vertices, transforms, colors
     GLfloat vertices[] = {
-          0.0f, 0.0f, 0.0f,
-          -0.5f, -0.5f, 0.0f,
-          0.5f, -0.5f, 0.0f
+          0.0f, 0.0f, -0.5f,
+          -0.5f, -0.5f, -0.5f,
+          0.5f, -0.5f, -0.5f
     };
 
     GLfloat colors[] = {

@@ -36,3 +36,15 @@ void Transform::scale(float x, float y, float z) {
     mTransformMatrix.m[2][2] *= z;
 }
 
+void Transform::applyMatrix(float (*matrix)[4]) {
+    Matrix4x4 matrix4x4;
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            matrix4x4.m[i][j] = matrix[i][j];
+        }
+    }
+
+    applyMatrix(matrix4x4);
+}
+
+

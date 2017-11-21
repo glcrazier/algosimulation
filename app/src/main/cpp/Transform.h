@@ -11,6 +11,11 @@ public:
     void translate(float x, float y, float z);
     void applyMatrix(Matrix4x4& matrix);
     void scale(float x, float y, float z);
+    void applyMatrix(float matrix[4][4]);
+
+    float* getData() {
+        return (float *) mTransformMatrix.m;
+    }
 
     static Matrix<4> createTransformFromVectors(Vector3 &u, Vector3 &v, Vector3 &w);
 private:

@@ -4,7 +4,8 @@
 
 #include "Camera.h"
 
-Camera::Camera(Point& position, Vector3& lookDirection, Vector3& upDirection, float near, float far, float aspectRatio)
+Camera::Camera(Point& position, Vector3& lookDirection, Vector3& upDirection, float near, float far,
+               float farPlaneWidth, float farPlaneHeight)
 {
     mFrustum.translate(-position.x, -position.y, -position.z);
 
@@ -19,7 +20,11 @@ Camera::Camera(Point& position, Vector3& lookDirection, Vector3& upDirection, fl
 
     mFrustum.applyMatrix(m);
 
-    mFrustum.scale(1.0f / (far), 1.0f / far, 1.0f / far);
-    //TODO: Finish the remaining part.
+    mFrustum.scale(2.0f / farPlaneWidth, 2.0f / farPlaneHeight, 1.0f / far);
 
+    float d[4][4] = {1.0f, 0.0f, 0.0f, 0.0f,
+                     0.0f, 1.0f, 0.0f, 0.0f,
+                     0.0f, 0.0f, far / (far - near), near / (far - near),
+                     0.0f, 0.0f, -1.0f, 0.0f};
+    mFrustum.applyMatrix(d);
 }
