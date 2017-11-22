@@ -171,7 +171,7 @@ bool NativeEngine::InitRenderer() {
         Vector3 look(0.0f, 0.0f, -1.0f);
         Vector3 vup(0.0f, 1.0f, 0.0f);
         Camera camera(p, look, vup, 0.1f, 1.0f, 2.0f, 2.0f);
-        glUniformMatrix4fv(location, 1, GL_FALSE, camera.getMatrixData());
+        glUniformMatrix4fv(location, 1, GL_TRUE, camera.getMatrixData());
     }
 
     free(uniformName);
@@ -216,9 +216,9 @@ void NativeEngine::RenderFrame() {
     //let's build a cubic.
     //vertices, transforms, colors
     GLfloat vertices[] = {
-          0.0f, 0.0f, -0.5f,
-          -0.5f, -0.5f, -0.5f,
-          0.5f, -0.5f, -0.5f
+          0.0f, 0.0f, -.5f,
+          -0.25f, -0.25f, -0.5f,
+          0.25f, -0.25f, -0.5f
     };
 
     GLfloat colors[] = {

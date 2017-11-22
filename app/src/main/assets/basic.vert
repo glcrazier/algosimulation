@@ -4,6 +4,6 @@ layout(location = 1) in vec3 aColor;
 out vec3 vColor;
 uniform mat4 gMatViewProj;
 void main() {
-        gl_Position = gMatViewProj * vPosition;
+    gl_Position = gMatViewProj * vPosition;
     vColor = aColor;
 }
