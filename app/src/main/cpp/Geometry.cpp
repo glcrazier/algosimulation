@@ -46,6 +46,38 @@ Cube::Cube(Point &p1, Point &p2) {
     mVertices[23] = mVertices[14];
 }
 
-Sphere::Sphere(GLfloat radius, Point &origin) {
+Sphere::Sphere(float radius, Point &origin) {
 
+}
+
+Rect::Rect(Point p1, Point p2, Point p3, Point p4) {
+    size_t i = 0;
+    mVertices[i++] = p1.x;
+    mVertices[i++] = p1.y;
+    mVertices[i++] = p1.z;
+    mVertices[i++] = p2.x;
+    mVertices[i++] = p2.y;
+    mVertices[i++] = p2.z;
+    mVertices[i++] = p3.x;
+    mVertices[i++] = p3.y;
+    mVertices[i++] = p3.z;
+    mVertices[i++] = p4.x;
+    mVertices[i++] = p4.y;
+    mVertices[i++] = p4.z;
+
+    mIndices[0] = 0;
+    mIndices[1] = 1;
+    mIndices[2] = 2;
+    mIndices[3] = 3;
+}
+
+
+short* Rect::vertexIndices(size_t &number) {
+    number = 4;
+    return mIndices;
+}
+
+float* Rect::vertices(size_t &number) {
+    number = 12;
+    return mVertices;
 }

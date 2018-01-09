@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Geometry.h"
 #include "Vector.h"
+#include "Scene.h"
 
 static void handle_app_cmd(struct android_app *app, int32_t cmd) {
     NativeEngine *engine = (NativeEngine *) app->userData;
@@ -122,60 +123,46 @@ bool NativeEngine::InitRenderer() {
     eglQuerySurface(mEGLDisplay, mEGLSurface, EGL_WIDTH, &mWidth);
     eglQuerySurface(mEGLDisplay, mEGLSurface, EGL_HEIGHT, &mHeight);
 
-    if (!mVertexShaderLoader.loadShader("basic.vert")) {
-        LOG("unable to load vertex shader.");
-        return false;
-    }
-    if (!mFragShaderLoader.loadShader("basic.frag")) {
-        LOG("unable to load fragment shader.");
-        return false;
-    }
-
-    mProgram = glCreateProgram();
-    if (mProgram == 0) {
-        return false;
-    }
-
-    glAttachShader(mProgram, mVertexShaderLoader.getShader());
-    glAttachShader(mProgram, mFragShaderLoader.getShader());
-
-    glLinkProgram(mProgram);
-
-    GLint linked;
-
-    glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
-
-    if (!linked) {
-        LOG("unable to link program.");
-        glDeleteProgram(mProgram);
-        return false;
-    }
-
     glViewport(0, 0, mWidth, mHeight);
+//    GLint numUniforms;
+//    GLint maxUniformLen;
+//    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
+//    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
+//
+//    char *uniformName = (char *) malloc(sizeof (char) * maxUniformLen);
+//
+//    for (int i = 0; i < numUniforms; ++i) {
+//        GLenum  type;
+//        glGetActiveUniform(mProgram, i, maxUniformLen, NULL, NULL, &type, uniformName);
+//        LOG("uniform name %s", uniformName);
+//        GLint location = glGetUniformLocation(mProgram, uniformName);
+//        Point p = {0.0f, 0.0f, 0.4f};
+//        Vector3 look(0.0f, 0.0f, -1.0f);
+//        Vector3 vup(0.0f, 1.0f, 0.0f);
+//        Camera camera(p, look, vup, 0.1f, 3.0f, 5.0f, 5.0f * mHeight / mWidth);
+//        glUniformMatrix4fv(location, 1, GL_TRUE, camera.getMatrixData());
+//    }
+//
+//    free(uniformName);
+    mScene = SceneBuilder()
+            .setAppContext(mApp)
+            ->setVertexShader("basic.vert")
+            ->setFragmentShader("basic.frag")
+            ->setWidth(mWidth)
+            ->setHeight(mHeight)
+            ->create();
 
-    glUseProgram(mProgram);
-
-    GLint numUniforms;
-    GLint maxUniformLen;
-    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
-    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
-
-    char *uniformName = (char *) malloc(sizeof (char) * maxUniformLen);
-
-    for (int i = 0; i < numUniforms; ++i) {
-        GLenum  type;
-        glGetActiveUniform(mProgram, i, maxUniformLen, NULL, NULL, &type, uniformName);
-        LOG("uniform name %s", uniformName);
-        GLint location = glGetUniformLocation(mProgram, uniformName);
-        Point p = {0.0f, 0.0f, 0.2f};
-        Vector3 look(0.0f, 0.0f, -1.0f);
-        Vector3 vup(0.0f, 1.0f, 0.0f);
-        Camera camera(p, look, vup, 0.1f, 1.0f, 2.0f, 2.0f);
-        glUniformMatrix4fv(location, 1, GL_TRUE, camera.getMatrixData());
+    if (!mScene || !mScene->setup()) {
+        delete mScene;
+        mScene = nullptr;
+        return false;
     }
 
-    free(uniformName);
-
+    Rect *rect = new Rect(Point(-0.25f, 0.25f, -0.1f),
+                          Point(-0.25f, -0.25f, -0.1f),
+                          Point(0.25F, 0.25f, -0.7f),
+                          Point(0.25f, -0.25f, -0.7f));
+    mScene->addShape(rect);
     return true;
 }
 
@@ -213,41 +200,9 @@ void NativeEngine::RenderFrame() {
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //let's build a cubic.
-    //vertices, transforms, colors
-    GLfloat vertices[] = {
-          0.0f, 0.0f, -.5f,
-          -0.25f, -0.25f, -0.5f,
-          0.25f, -0.25f, -0.5f
-    };
-
-    GLfloat colors[] = {
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f
-    };
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors);
-    glEnableVertexAttribArray(1);
-
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    //bind vertex data
-//    GLuint vbo;
-//    glGenBuffers(1, &vbo);
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) / sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    //build a frustum matrix
-
-
-//    glDeleteBuffers(1, &vbo);
-
-
-
-
+    if (mScene) {
+        mScene->render();
+    }
 
     eglSwapBuffers(mEGLDisplay, mEGLSurface);
 }

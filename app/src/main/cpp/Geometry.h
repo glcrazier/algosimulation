@@ -5,25 +5,49 @@
 #ifndef FIRST3D_BASICSHAPE_H
 #define FIRST3D_BASICSHAPE_H
 
-#include <GLES3/gl3.h>
+#include <cstdio>
 
 struct Point {
-    GLfloat x;
-    GLfloat y;
-    GLfloat z;
+    float x;
+    float y;
+    float z;
+
+    Point(float x, float y, float z) {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+};
+
+class Shape {
+public:
+    virtual float* vertices(size_t& number) = 0;
+    virtual short* vertexIndices(size_t& number) = 0;
+};
+
+class Rect : public Shape {
+public:
+    Rect(Point p1, Point p2, Point p3, Point p4);
+
+    float* vertices(size_t& number);
+
+    short * vertexIndices(size_t& number);
+
+private:
+    float mVertices[4 * 3];
+    short mIndices[4];
 };
 
 class Cube {
 public:
     Cube(Point& p1, Point& p2);
 private:
-    GLfloat mVertices[24];
-
+    float mVertices[24];
 };
 
 class Sphere {
 public:
-    Sphere(GLfloat radius, Point& origin);
+    Sphere(float radius, Point& origin);
 };
 
 #endif //FIRST3D_BASICSHAPE_H

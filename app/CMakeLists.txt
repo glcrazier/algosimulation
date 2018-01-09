@@ -24,6 +24,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/NativeEngine.cpp
              src/main/cpp/Geometry.cpp
              src/main/cpp/Vector.cpp
+             src/main/cpp/Scene.cpp
              src/main/cpp/Camera.cpp
              src/main/cpp/Transform.cpp
              src/main/cpp/ShaderLoader.cpp)

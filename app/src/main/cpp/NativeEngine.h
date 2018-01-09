@@ -12,6 +12,7 @@
 
 #define LOG(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, "First3D", __VA_ARGS__))
 
+class Scene;
 class NativeEngine {
 public:
     NativeEngine(struct android_app* app);
@@ -46,6 +47,8 @@ private:
     void DestroyRenderer();
 
     void RenderFrame();
+
+    Scene* mScene;
 };
 
 
