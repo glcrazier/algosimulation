@@ -5,12 +5,11 @@
 #ifndef FIRST3D_VECTOR_H
 #define FIRST3D_VECTOR_H
 
-#include <GLES3/gl3.h>
 #include <cmath>
 
 class Vector3 {
 public:
-    Vector3(GLfloat x, GLfloat y, GLfloat z) {
+    Vector3(float x, float y, float z) {
         v[0] = x;
         v[1] = y;
         v[2] = z;

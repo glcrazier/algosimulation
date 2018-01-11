@@ -17,9 +17,8 @@ static void handle_app_cmd(struct android_app *app, int32_t cmd) {
     }
 }
 
-NativeEngine::NativeEngine(struct android_app *app): mIsVisible(false), mHasWindow(false),
-                                                     mVertexShaderLoader(app, GL_VERTEX_SHADER),
-                                                     mFragShaderLoader(app, GL_FRAGMENT_SHADER)
+NativeEngine::NativeEngine(struct android_app *app): mIsVisible(false)
+        , mHasWindow(false)
 {
     mApp = app;
     mApp->onAppCmd = handle_app_cmd;
@@ -41,6 +40,8 @@ void NativeEngine::HandleAppCmd(int32_t cmd) {
             break;
         case APP_CMD_DESTROY:
             DestroyRenderer();
+            break;
+        default:
             break;
     }
 }
@@ -124,26 +125,7 @@ bool NativeEngine::InitRenderer() {
     eglQuerySurface(mEGLDisplay, mEGLSurface, EGL_HEIGHT, &mHeight);
 
     glViewport(0, 0, mWidth, mHeight);
-//    GLint numUniforms;
-//    GLint maxUniformLen;
-//    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
-//    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
-//
-//    char *uniformName = (char *) malloc(sizeof (char) * maxUniformLen);
-//
-//    for (int i = 0; i < numUniforms; ++i) {
-//        GLenum  type;
-//        glGetActiveUniform(mProgram, i, maxUniformLen, NULL, NULL, &type, uniformName);
-//        LOG("uniform name %s", uniformName);
-//        GLint location = glGetUniformLocation(mProgram, uniformName);
-//        Point p = {0.0f, 0.0f, 0.4f};
-//        Vector3 look(0.0f, 0.0f, -1.0f);
-//        Vector3 vup(0.0f, 1.0f, 0.0f);
-//        Camera camera(p, look, vup, 0.1f, 3.0f, 5.0f, 5.0f * mHeight / mWidth);
-//        glUniformMatrix4fv(location, 1, GL_TRUE, camera.getMatrixData());
-//    }
-//
-//    free(uniformName);
+
     mScene = SceneBuilder()
             .setAppContext(mApp)
             ->setVertexShader("basic.vert")
@@ -160,19 +142,16 @@ bool NativeEngine::InitRenderer() {
 
     Rect *rect = new Rect(Point(-0.25f, 0.25f, -0.1f),
                           Point(-0.25f, -0.25f, -0.1f),
-                          Point(0.25F, 0.25f, -0.7f),
-                          Point(0.25f, -0.25f, -0.7f));
+                          Point(0.25F, 0.25f, -0.3f),
+                          Point(0.25f, -0.25f, -0.1f));
     mScene->addShape(rect);
+    mScene->setPerspectiveCamera(Point(0.0f, 0.0f, 0.4f), Vector3(0.0f, 0.0f, -1.0f),
+                                 Vector3(0.0f, 1.0f, 0.0f),
+                                 0.1f, 3.0f);
     return true;
 }
 
 void NativeEngine::DestroyRenderer() {
-
-
-    mVertexShaderLoader.unload();
-    mFragShaderLoader.unload();
-
-    glDeleteProgram(mProgram);
 
     eglMakeCurrent(mEGLDisplay, EGL_NO_SURFACE, EGL_NO_CONTEXT, EGL_NO_CONTEXT);
     if (mEGLContext != EGL_NO_CONTEXT) {

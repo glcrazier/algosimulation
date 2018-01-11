@@ -3,8 +3,7 @@
 //
 
 #include "Scene.h"
-#include "Geometry.h"
-
+#include "Camera.h"
 
 Scene* SceneBuilder::create() {
     if (!validate()) {
@@ -52,6 +51,10 @@ Scene::~Scene() {
         delete[] mVboIds;
         mVboIds = nullptr;
         mVboNum = 0;
+    }
+    if (!mCamera) {
+        delete mCamera;
+        mCamera = nullptr;
     }
 }
 
@@ -136,4 +139,17 @@ void Scene::render() {
 
 void Scene::addShape(Shape *shape) {
     mShapes.push_back(shape);
+}
+
+void Scene::setPerspectiveCamera(Point pos
+        , Vector3 lookDirection
+        , Vector3 upDirection
+        , float near
+        , float far) {
+    mCamera = new Camera(pos, lookDirection, upDirection, near, far, 5.0f * mWidth/mHeight, 5.0f);
+    if (mProgram) {
+        glUseProgram(mProgram);
+        GLint location = glGetUniformLocation(mProgram, "gMatViewProj");
+        glUniformMatrix4fv(location, 1, GL_TRUE, mCamera->getMatrixData());
+    }
 }

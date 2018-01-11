@@ -7,9 +7,12 @@
 
 #include <vector>
 #include "ShaderLoader.h"
+#include "Geometry.h"
+#include "Vector.h"
 
 class Shape;
 class Scene;
+class Camera;
 class android_app;
 
 class SceneBuilder {
@@ -64,6 +67,8 @@ public:
 
     void addShape(Shape* shape);
 
+    void setPerspectiveCamera(Point pos, Vector3 lookDirection, Vector3 upDirection, float near, float far);
+
 private:
     float mWidth;
     float mHeight;
@@ -79,6 +84,7 @@ private:
     size_t mVboNum;
     size_t mTotalNumVertices;
     size_t mTotalNumIndices;
+    Camera* mCamera;
 };
 
 

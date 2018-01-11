@@ -36,12 +36,6 @@ private:
     int mWidth;
     int mHeight;
 
-    GLuint mProgram;
-
-    ShaderLoader mVertexShaderLoader;
-    ShaderLoader mFragShaderLoader;
-
-
     bool InitRenderer();
 
     void DestroyRenderer();

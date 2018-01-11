@@ -13,7 +13,7 @@ float dot(Vector3& v1, Vector3& v2) {
 }
 
 void Vector3::normalize() {
-    GLfloat l = length();
+    float l = length();
     for (int i = 0; i < 3; ++i) {
         v[i] /= l;
     }
